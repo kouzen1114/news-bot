@@ -5,18 +5,21 @@ on:
   schedule:
     - cron: '0 * * * *'
 
+permissions:
+  contents: write
+
 jobs:
   run:
     runs-on: ubuntu-latest
 
     steps:
       - name: コード取得
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          persist-credentials: true   # ←これ重要
+          fetch-depth: 0
 
       - name: Pythonセットアップ
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
@@ -32,6 +35,5 @@ jobs:
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add newsDB.xlsx
-          git commit -m "update news" || echo "no changes"
+          git diff --cached --quiet || git commit -m "update news"
           git push
-``
