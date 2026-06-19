@@ -2,31 +2,42 @@ import feedparser
 import pandas as pd
 import os
 
-# RSS URL
-url = "https://news.yahoo.co.jp/rss/categories/business.xml"
+# RSS一覧（全カテゴリ）
+urls = [
+    "https://news.yahoo.co.jp/rss/categories/top-picks.xml",
+    "https://news.yahoo.co.jp/rss/categories/domestic.xml",
+    "https://news.yahoo.co.jp/rss/categories/world.xml",
+    "https://news.yahoo.co.jp/rss/categories/business.xml",
+    "https://news.yahoo.co.jp/rss/categories/it.xml",
+    "https://news.yahoo.co.jp/rss/categories/science.xml",
+    "https://news.yahoo.co.jp/rss/categories/local.xml",
+    "https://news.yahoo.co.jp/rss/categories/entertainment.xml",
+    "https://news.yahoo.co.jp/rss/categories/sports.xml"
+]
 
-# ファイル
+# キーワード
+keywords = ["税", "消費税", "増税", "課税", "税制"]
+
 file_path = "newsDB.xlsx"
-
-# RSS取得
-feed = feedparser.parse(url)
-
 data = []
 
-for entry in feed.entries:
-    title = entry.title
+for url in urls:
+    feed = feedparser.parse(url)
 
-    if "税" in title:
-        category = entry.get("category", "")
-        link = entry.link
-        published = entry.published
+    for entry in feed.entries:
+        title = entry.title
 
-        data.append([category, title, link, published])
+        if any(k in title for k in keywords):
+            category = entry.get("category", "")
+            link = entry.link
+            published = entry.published
 
-# DataFrame化
+            data.append([category, title, link, published])
+
+# DataFrame
 df_new = pd.DataFrame(data, columns=["カテゴリ", "タイトル", "URL", "更新日"])
 
-# 既存ファイルとの結合
+# 重複排除
 if os.path.exists(file_path):
     df_old = pd.read_excel(file_path)
     df_all = pd.concat([df_old, df_new]).drop_duplicates(subset="URL")
@@ -35,3 +46,5 @@ else:
 
 # 保存
 df_all.to_excel(file_path, index=False)
+
+print(f"取得件数: {len(df_new)}")
