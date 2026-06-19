@@ -1,5 +1,18 @@
 name: Yahoo News Bot
 
+
+name: 変更をコミット
+  run: |
+    git config user.name "github-actions"
+    git config user.email "actions@github.com"
+    git add newsDB.xlsx
+    git diff --cached --quiet || git commit -m "update news"
+    git push --force
+
+
+
+
+
 on:
   workflow_dispatch:
   schedule:
@@ -32,8 +45,8 @@ jobs:
 
       - name: 変更をコミット
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add newsDB.xlsx
-          git diff --cached --quiet || git commit -m "update news"
-          git push
+              git config user.name "github-actions"
+              git config user.email "actions@github.com"
+              git add newsDB.xlsx
+              git diff --cached --quiet || git commit -m "update news"
+              git push --force
