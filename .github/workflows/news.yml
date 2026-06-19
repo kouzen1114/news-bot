@@ -1,22 +1,9 @@
 name: Yahoo News Bot
 
-
-name: 変更をコミット
-  run: |
-    git config user.name "github-actions"
-    git config user.email "actions@github.com"
-    git add newsDB.xlsx
-    git diff --cached --quiet || git commit -m "update news"
-    git push --force
-
-
-
-
-
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '0 * * * *'  # 1時間ごと
 
 permissions:
   contents: write
@@ -26,27 +13,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # リポジトリ取得
       - name: コード取得
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Pythonセットアップ
       - name: Pythonセットアップ
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      # ライブラリインストール
       - name: ライブラリインストール
         run: |
           pip install feedparser pandas openpyxl
 
+      # スクリプト実行
       - name: スクリプト実行
         run: python script.py
 
+      # Excelをコミット＆push（重要）
       - name: 変更をコミット
         run: |
-              git config user.name "github-actions"
-              git config user.email "actions@github.com"
-              git add newsDB.xlsx
-              git diff --cached --quiet || git commit -m "update news"
-              git push --force
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add newsDB.xlsx
+          git diff --cached --quiet || git commit -m "update news"
+          git push --force
