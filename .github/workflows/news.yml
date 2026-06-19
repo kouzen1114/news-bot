@@ -3,7 +3,7 @@ name: Yahoo News Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'  # 1時間ごと
+    - cron: '0 * * * *'
 
 jobs:
   run:
@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: コード取得
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true   # ←これ重要
 
       - name: Pythonセットアップ
         uses: actions/setup-python@v4
@@ -32,3 +34,4 @@ jobs:
           git add newsDB.xlsx
           git commit -m "update news" || echo "no changes"
           git push
+``
