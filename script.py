@@ -14,7 +14,7 @@ urls = [
     "https://news.yahoo.co.jp/rss/categories/sports.xml"
 ]
 
-keywords = ["税", "消費税", "増税", "課税", "税制"]
+keywords = ["税"]
 
 file_path = "newsDB.xlsx"
 data = []
