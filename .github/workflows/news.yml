@@ -3,7 +3,7 @@ name: Yahoo News Bot
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *'  # 1時間ごと
+    - cron: '*/30 * * * *'  # 30分ごと
 
 permissions:
   contents: write
